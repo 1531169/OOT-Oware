@@ -5,15 +5,20 @@ class Draw {
 	public Draw() {
 	}
 
-	void seed() {
+	void distribute(int hollow) {
+		seed();
+		capture();
+	}
+	
+	private void seed() {
 		// TODO: seeding
 	}
 	
-	void capture() {
+	private void capture() {
 		// TODO: capturing
 	}
 	
-	boolean isValidDraw() {
+	boolean isValidDraw(int hollow) {
 		// TODO: implement when it's valid or not
 		return true;
 	}

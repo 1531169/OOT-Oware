@@ -72,7 +72,7 @@ class IOController {
 		
 		if(player == 1) {
 			int hollow = input + PLAYER1_SHIFT;
-			if(new Draw().isValidDraw(hollow)) {
+			if(Draw.isDrawValid(hollow)) {
 				return hollow;
 			}
 			else{
@@ -84,7 +84,7 @@ class IOController {
 		
 		if(player == 2) {
 			int hollow = input + PLAYER2_SHIFT;
-			if(new Draw().isValidDraw(hollow)) {
+			if(Draw.isDrawValid(hollow)) {
 				return hollow;
 			}
 			else{

@@ -6,4 +6,10 @@ class ComputerPlayer extends Player {
 	public ComputerPlayer() {
 		super(NAME);
 	}
+
+	@Override
+	Draw doDraw(Pitch pitch) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

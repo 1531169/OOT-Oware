@@ -1,6 +1,7 @@
 package de.hsma.ss16.oot.oware;
 
 class Draw {
+
 	private static int nr = 0;
 	private Pitch pitch;
 	private int startField;
@@ -8,7 +9,7 @@ class Draw {
 	private Player player;
 
 	private int catched;
-	
+
 	public Draw(Player player, int start) {
 		init(player, Game.getPitch(), start);
 	}
@@ -16,7 +17,7 @@ class Draw {
 	public Draw(Player player, Pitch pitch, int start) {
 		init(player, pitch, start);
 	}
-	
+
 	private void init(Player p, Pitch pi, int s) {
 		setNr(getNr() + 1);
 		this.player = p;
@@ -56,11 +57,11 @@ class Draw {
 		}
 		return catched;
 	}
-	
-	static boolean isDrawValid(int hollow) {
-		/*
-		 * TODO: implement checking of the fields whether it is valid
-		 */
+
+	boolean isDrawValid(Player player, int hollow) {
+		if(pitch.isDrawValid(player, hollow)){
+			return true;
+		}
 		return false;
 	}
 
@@ -71,7 +72,7 @@ class Draw {
 	public void setPitch(Pitch startPitch) {
 		this.pitch = startPitch;
 	}
-	
+
 	/**
 	 * @return the startField
 	 */
@@ -80,7 +81,8 @@ class Draw {
 	}
 
 	/**
-	 * @param startField the startField to set
+	 * @param startField
+	 *            the startField to set
 	 */
 	public void setStartField(int startField) {
 		this.startField = startField;
@@ -94,7 +96,8 @@ class Draw {
 	}
 
 	/**
-	 * @param endField the endField to set
+	 * @param endField
+	 *            the endField to set
 	 */
 	public void setEndField(int endField) {
 		this.endField = endField;
@@ -108,7 +111,8 @@ class Draw {
 	}
 
 	/**
-	 * @param player the player to set
+	 * @param player
+	 *            the player to set
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
@@ -122,7 +126,8 @@ class Draw {
 	}
 
 	/**
-	 * @param catched the catched to set
+	 * @param catched
+	 *            the catched to set
 	 */
 	public void setCatched(int catched) {
 		this.catched = catched;

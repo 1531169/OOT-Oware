@@ -2,103 +2,157 @@ package de.hsma.ss16.oot.oware;
 
 import java.util.Scanner;
 
+// TODO: Add JavaDoc
 class IOController {
 
-	private Scanner sc;
+	private static Scanner sc = new Scanner(System.in);
 	
-	private static final int PLAYER1_SHIFT = -1;
-	private static final int PLAYER2_SHIFT = 5;
+	private static final String TXT_ENTER_NAME = "Bitte geben Sie ihren Namen ein:";
 	
+	private static final String TXT_ENTER_MODE = "Welchen Modus möchten Sie spielen?" +
+			"\n Geben Sie einen der folgenden Modi ein: ";
+	
+	private static final String TXT_ENTER_DIFFICULTY = "Auf welchem Schwierigkeitsgrad soll " +
+				"der Computer sein? \n 1 = Leicht ; 2 = Mittel ;" +
+				" 3 = Schwer";
+	
+	private static final String TXT_ENTER_FIELD = "Wählen Sie die Mulde aus, die sie" +
+		" spielen wollen (a - f):";
+	
+	private static final String TXT_INPUT_NOT_VALID = "Eingabe ungültig\n";
+	
+	private static final String TXT_INPUT_MORE_THAN_ONE_SIGN = "Eingabe darf nur aus einem Zeichen bestehen!";
+	
+	private static final String TXT_DRAW_NOT_VALID = "Diese Mulde dürfen Sie" +
+					" nicht spielen!\n";
+	
+	private static final String TXT_DO_INPUT = "> ";
+	
+	private static final String ONESTR = "1", TWOSTR = "2", THREESTR = "3";
+	
+	private static final int ONE = 1, TWO = 2, THREE = 3;
+	
+		
 	public IOController() {
-		sc = new Scanner(System.in);
+
 	}
 	
-	Mode getMode() {
+	static Mode getMode() {
 		String input;
 
-		System.out.println("Welchen Modus möchten Sie spielen?" +
-			"\n Geben Sie einen der folgenden Modi ein: ");
+		System.out.println(TXT_ENTER_MODE);
 		showModes();
-		System.out.print("> ");
-		input = sc.nextLine();
+		System.out.print(TXT_DO_INPUT);
 		
+		try{
+			input = sc.nextLine();
+		}
+		catch(Exception e) {
+			System.out.println(TXT_INPUT_NOT_VALID);
+			return getMode();
+		}
+				
 		for(Mode mode : Mode.values()) {
 			if(input.equals(mode.getMode())) {
 				return mode;
 			}
+			if(input.toUpperCase().equals(mode.getMode())) {
+				return mode;
+			}
 		}
-		System.out.println("Eingabe ungültig\n");
+		System.out.println(TXT_INPUT_NOT_VALID);
 		return getMode();
 	}
 	
-	String getName() {
-		System.out.println("Bitte geben Sie ihren Namen ein:");
-		System.out.print("> ");
-		return sc.nextLine();
-	}
-	
-	// TODO: Exception Handling: Eingabe kein Integer
-	int getDifficulty() {
-		int input;
+	static String getName() {
+		String input;
 		
-		System.out.println("Auf welchem Schwierigkeitsgrad soll" +
-				"der Computer sein? \n 1 = Leicht ; 2 = Mittel ;" +
-				" 3 = Schwer");
-		System.out.print("> ");
-		input = sc.nextInt();
+		System.out.println(TXT_ENTER_NAME);
+		System.out.print(TXT_DO_INPUT);
 		
-		if(input >= 1 && input <= 3) {
+		try{
+			input = sc.nextLine();
 			return input;
 		}
-		
-		System.out.println("Eingabe ungültig\n");
-		return getDifficulty();
+		catch(Exception e) {
+			System.out.println(TXT_INPUT_NOT_VALID);
+			return getName();
+		}
 	}
 	
-	// TODO: Exception Handling: Eingabe kein Integer
-	// TODO: Exception: Übergebener Spieler ist nicht 1 oder 2 (nur maximal 2 Spieler möglich)
-	int getHollow(int player) {
-		int input;
+	static int getDifficulty() {
+		String input;
 		
-		System.out.println("Wählen Sie die Mulde aus, die sie" +
-		" spielen wollen (1 - 6)");
-		System.out.print("> ");
-		input = sc.nextInt();
+		System.out.println(TXT_ENTER_DIFFICULTY);
+		System.out.print(TXT_DO_INPUT);
 		
-		if(input < 1 || input > 6) {
-			System.out.println("Eingabe ungültig\n");
-			return getHollow(player);
+		try{
+			input = sc.nextLine();			
+		}
+		catch(Exception e) {
+			System.out.println(TXT_INPUT_NOT_VALID);
+			return getDifficulty();
 		}
 		
-		if(player == 1) {
-			int hollow = input + PLAYER1_SHIFT;
-			if(Draw.isDrawValid(hollow)) {
-				return hollow;
-			}
-			else{
-				System.out.println("Diese Mulde dürfen Sie" +
-						" nicht spielen!\n");
-				return getHollow(player);
-			}
+		if(input.equals(ONESTR)) {
+			return ONE;
 		}
-		
-		if(player == 2) {
-			int hollow = input + PLAYER2_SHIFT;
-			if(Draw.isDrawValid(hollow)) {
-				return hollow;
-			}
-			else{
-				System.out.println("Diese Mulde dürfen Sie" +
-						" nicht spielen!\n");
-				return getHollow(player);
-			}
+		else if(input.equals(TWOSTR)) {
+			return TWO;
 		}
-		
-		System.out.println("Interner Fehler! Übergebener Parameter muss 1 oder 2 sein");
-		return -1;
+		else if(input.equals(THREESTR)) {
+			return THREE;
+		}
+		else {
+			System.out.println(TXT_INPUT_NOT_VALID);
+			return getDifficulty();
+		}
 	}
 	
-	private void showModes() {		
+	static int getField(HumanPlayer player) {
+		char input;
+		String inputStr;
+		
+		System.out.println(TXT_ENTER_FIELD);
+		System.out.print(TXT_DO_INPUT);
+		
+		try {
+			inputStr = sc.nextLine();
+		}
+		catch(Exception e) {
+			System.out.println(TXT_INPUT_NOT_VALID);
+			return getField(player);
+		}
+		
+		if(!(inputStr.length() == 1)) {
+			System.out.println(TXT_INPUT_MORE_THAN_ONE_SIGN);
+			return getField(player);
+		}
+		
+		if(player.getInputMap().containsKey(inputStr.charAt(0))) {
+			input = inputStr.charAt(0);
+		}
+		else if(player.getInputMap().containsKey(inputStr.toUpperCase().charAt(0))) {
+			input = inputStr.toUpperCase().charAt(0);
+		}
+		else {
+			System.out.println(TXT_INPUT_NOT_VALID);
+			return getField(player);
+		}
+		
+		int field = player.getInputMap().get(input);
+		
+		if(Draw.isDrawValid(player, field, Game.getPitch())) {
+			return field;
+		}
+		
+		else {
+			System.out.println(TXT_DRAW_NOT_VALID);
+			return getField(player);
+		}
+	}
+	
+	private static void showModes() {		
 		for(Mode mode : Mode.values()) {
 			System.out.print(mode + " ");
 		}

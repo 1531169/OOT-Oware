@@ -12,9 +12,13 @@ class HumanPlayer extends Player {
 	}
 
 	@Override
-	Draw doDraw(Pitch pitch) {
-		// TODO Auto-generated method stub
-		return null;
+	Draw doDraw() {
+		return new Draw(this, getField());
+	}
+	
+	@Override
+	protected int getField() {
+		return IOController.getField(this);
 	}
 	
 	HashMap<Character, Integer> getInputMap() {

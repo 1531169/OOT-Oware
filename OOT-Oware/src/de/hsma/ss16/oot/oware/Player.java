@@ -38,5 +38,7 @@ abstract class Player {
 		this.points += points;
 	}
 	
-	abstract Draw doDraw(Pitch pitch);
+	abstract Draw doDraw();
+	
+	abstract protected int getField();
 }

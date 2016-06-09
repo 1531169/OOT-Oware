@@ -10,9 +10,14 @@ class ComputerPlayer extends Player {
 	}
 
 	@Override
-	Draw doDraw(Pitch pitch) {
-		// TODO Auto-generated method stub
-		return null;
+	Draw doDraw() {
+		return new Draw(this, getField());
+	}
+	
+	@Override
+	protected int getField() {
+		// TODO implementation
+		return -1;
 	}
 	
 	int getDifficulty() {

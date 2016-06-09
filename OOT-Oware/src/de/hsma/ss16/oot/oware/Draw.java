@@ -58,7 +58,7 @@ class Draw {
 		return catched;
 	}
 
-	boolean isDrawValid(Player player, int hollow) {
+	static boolean isDrawValid(Player player, int hollow, Pitch pitch) {
 		if(pitch.isDrawValid(player, hollow)){
 			return true;
 		}

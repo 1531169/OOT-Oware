@@ -7,6 +7,8 @@ class IOController {
 
 	private static Scanner sc = new Scanner(System.in);
 	
+	private static final String TXT_WELCOME = "Herzlich Willkommen zum Spiel Oware!\n";
+	
 	private static final String TXT_ENTER_NAME = "Bitte geben Sie ihren Namen ein:";
 	
 	private static final String TXT_ENTER_MODE = "Welchen Modus möchten Sie spielen?" +
@@ -16,7 +18,7 @@ class IOController {
 				"der Computer sein? \n 1 = Leicht ; 2 = Mittel ;" +
 				" 3 = Schwer";
 	
-	private static final String TXT_ENTER_FIELD = "Wählen Sie die Mulde aus, die sie" +
+	private static final String TXT_ENTER_FIELD = "\nWählen Sie die Mulde aus, die sie" +
 		" spielen wollen (a - f):";
 	
 	private static final String TXT_INPUT_NOT_VALID = "Eingabe ungültig\n";
@@ -26,11 +28,25 @@ class IOController {
 	private static final String TXT_DRAW_NOT_VALID = "Diese Mulde dürfen Sie" +
 					" nicht spielen!\n";
 	
+	private static final String TXT_ANOTHER_ROUND = "Möchten Sie eine Revanche?\n (J = Ja)";
+	
+	private static final String YES = "J";
+	
 	private static final String TXT_DO_INPUT = "> ";
 	
 	private static final String ONESTR = "1", TWOSTR = "2", THREESTR = "3";
 	
 	private static final int ONE = 1, TWO = 2, THREE = 3;
+	
+	private static final String TXT_TIE = "Unentschieden";
+	
+	private static final String TXT_WINNER = " hat gewonnen! \nHerzlichen Glückwunsch!";
+	
+	private static final String TXT_ON_DRAW = " ist jetzt am Zug";
+	
+	private static final String TXT_PLAYER_ONE = "Spieler 1, ";
+	
+	private static final String TXT_PLAYER_TWO = "Spieler 2, ";
 	
 		
 	public IOController() {
@@ -150,6 +166,54 @@ class IOController {
 			System.out.println(TXT_DRAW_NOT_VALID);
 			return getField(player);
 		}
+	}
+	
+	static boolean getAnotherRound() {
+		String input;
+		
+		System.out.println(TXT_ANOTHER_ROUND);
+		System.out.print(TXT_DO_INPUT);
+		
+		try{
+			input = sc.nextLine();
+		}
+		catch(Exception e) {
+			System.out.println(TXT_INPUT_NOT_VALID);
+			return getAnotherRound();
+		}
+		
+		if(input.equals(YES)) {
+			return true;
+		}
+		return false;
+	}
+	
+	static void printWelcome() {
+		System.out.println(TXT_WELCOME);
+	}
+	
+	static void printPitch() {
+		System.out.println(Game.getPitch());
+	}
+	
+	static void printTie() {
+		System.out.println(TXT_TIE);
+	}
+	
+	static void printWinner(Player player) {
+		System.out.println(player.getName() + TXT_WINNER);
+	}
+	
+	static void printOnDraw(Player player) {
+		System.out.println("\n" + player.getName() + TXT_ON_DRAW);
+	}
+	
+	static void printPlayer1() {
+		System.out.print(TXT_PLAYER_ONE);
+	}
+	
+	static void printPlayer2() {
+		System.out.print(TXT_PLAYER_TWO);
 	}
 	
 	private static void showModes() {		

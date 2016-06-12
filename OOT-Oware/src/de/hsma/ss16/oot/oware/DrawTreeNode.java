@@ -61,65 +61,6 @@ class DrawTreeNode {
 			}
 		}
 	}
-	
-	/*
-	 * -----------------------------------------------------
-	 * 
-	 * Buggy Methoden!!
-	 * -----------------------------------------------------
-	 */
-
-	ArrayList<Integer> getWay(int curPoints, int winCondition) {
-		ArrayList<Integer> way = new ArrayList<>();
-		isPossibleToWin(this, curPoints, winCondition, way);
-		return way;
-	}
-
-	boolean isWinnableInTree(int curPoints) {
-		return isPossibleToWin(this, curPoints, 25, null);
-	}
-
-	private static boolean isPossibleToWin(DrawTreeNode node, int collected, int winCondition, ArrayList<Integer> way) {
-		int start = 6,
-			end = 12;
-		collected += node.catched;
-
-		int index = 0;
-
-		if (way != null) {
-			way.add(node.ownPlayedField);
-		}
-		// TODO: abbruchbedingung muss noch definiert werden
-		if (collected >= winCondition) // bester weg weil mehr als hälfte der
-										// Kugeln
-		{
-			return true;
-		} else {
-			// subelemente durchgehen
-			for (int i = start; i < end; i++, index++) {
-				// falls es weniger als 6 züge gibt
-				DrawTreeNode subNode = node.getNode(index);
-				if (subNode != null) {
-					boolean found = DrawTreeNode.isPossibleToWin(subNode, collected, winCondition, way);
-					if (found) {
-						return true;
-					}
-				}
-			}
-		}
-
-		if (way != null) {
-			way.remove(way.indexOf(node.ownPlayedField));
-		}
-		return false;
-	}
-	
-	/*
-	 * -----------------------------------------------------
-	 * 
-	 * FERTIGE METHODEN 
-	 * -----------------------------------------------------
-	 */
 
 	/**
 	 * @see look at static DrawTreeNode.getMax(DrawTreeNode node).
@@ -142,8 +83,6 @@ class DrawTreeNode {
 
 		int tmpMax = 0;
 		for (DrawTreeNode subNode : node.getNodes()) {
-			// computerzüege
-			// hier wollen wir maximum
 			if (subNode != null) {
 				int minmax = subNode.getMax();
 				if (minmax > tmpMax) {

@@ -3,12 +3,12 @@ package de.hsma.ss16.oot.oware;
 class ComputerPlayer extends Player {
 	private static String NAME = "Computer";
 	private int difficulty;
-	private KI ki;
+	private ArtificialIntelligence ki;
 
 	ComputerPlayer(int difficulty) {
 		super(NAME);
 		this.difficulty = difficulty;
-		this.ki = new KI(getDifficulty(), Game.getPitch());
+		this.ki = new ArtificialIntelligence(getDifficulty(), Game.getPitch());
 	}
 
 	@Override

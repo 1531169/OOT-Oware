@@ -2,12 +2,12 @@ package de.hsma.ss16.oot.oware;
 
 import java.util.ArrayList;
 
-class KI {
+class ArtificialIntelligence {
 	private ArrayList<DrawTreeNode> nodes;
 	private Pitch pitch;
 	private int deep;
 	
-	KI(int difficulty, Pitch currentPitch) {
+	ArtificialIntelligence(int difficulty, Pitch currentPitch) {
 		setNodes(new ArrayList<>());
 		this.pitch = currentPitch;
 		// maximum 5 calculation => 5 Draw of computer and 5 from human
@@ -19,57 +19,11 @@ class KI {
 			// only make draw if in the field are balls
 			if (pitch.getFields()[i] > 0) {
 				SimulatedDraw draw = new SimulatedDraw(pitch.getCopy(), i);
-				// System.out.println(draw.getPitch());
 				DrawTreeNode node = new DrawTreeNode(-1, i, draw.getCatched());
 				node.calc(deep, level + 1, draw.getPitch());
 				getNodes().add(node);
 			}
 		}
-	}
-	
-	/*
-	 * !			!			!			!			!			!	 !
-	 * -------------------------------------------------------------------
-	 * Hier ist noch ein Bug drinnen. Beim suchen des besten weges gibt es
-	 * noch einen Fehler!
-	 * -------------------------------------------------------------------
-	 */
-	private ArrayList<Integer> getBestWay(int currentPoints) {
-		ArrayList<Integer> way = new ArrayList<>();
-		int condition = getMax();
-		int sum = 0;
-		for(DrawTreeNode node : getNodes()) {
-			int tmpSum = 0;
-			if(node != null) {
-				ArrayList<Integer> tmpWay = node.getWay(currentPoints, condition);
-				for (Integer draw : tmpWay) {
-					//tmpSum += draw.getCatched();
-				}
-				if(tmpSum > sum) {
-					sum = tmpSum;
-					way = tmpWay;
-				}
-			}
-		}
-		return way;
-	}
-	
-	/**
-	 * Calculates whether if its possible to win the game in the current
-	 * tree.
-	 * 
-	 * @return	boolean if computer can win
-	 */
-	boolean isPossibleToWin(int curPoints) {
-		boolean isWinable = false;
-		for(DrawTreeNode node : getNodes()) {
-			if(node != null) {
-				if(node.isWinnableInTree(curPoints)) {
-					isWinable = true;
-				}
-			}
-		}
-		return isWinable;
 	}
 	
 	/**
@@ -114,9 +68,6 @@ class KI {
 	 * @return	deep of the tree.
 	 */
 	int deep() {
-		/* (-1), because the node "tree" is the root node
-		 *  and is a draw which is already done.
-		 */
 		int max = 0;
 		for(DrawTreeNode node : getNodes()) {
 			if(node != null) {

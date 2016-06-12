@@ -2,30 +2,27 @@ package de.hsma.ss16.oot.oware;
 
 import java.util.ArrayList;
 
-public class DrawTreeNode {
-	/**
-	 * Draw which is done in this node.
-	 */
-	private Draw draw;
+class DrawTreeNode {
 	/**
 	 * Calculated subnodes of this node which contains simulated
 	 * posibility of next draws.
 	 */
-	private DrawTreeNode[] nodes;
-	/**
-	 * isMax = true means this node is in level of computer player otherwise it
-	 * is a level for human player
-	 */
-	private boolean isMax;
-
+	private ArrayList<DrawTreeNode> nodes;
+	
+	private int priorPlayedField = 0;
+	private int catched = 0;
+	private int ownPlayedField;
+	
 	/**
 	 * Contructor of the single Node.
 	 * 
-	 * @param draw	executed draw
+	 * @param ownDraw	executed draw
 	 */
-	public DrawTreeNode(Draw draw) {
-		this.setDraw(draw);
-		this.setNodes(new DrawTreeNode[6]);
+	DrawTreeNode(int prior, int own, int catched) {
+		setPriorPlayedField(prior);
+		setOwnPlayedField(own);
+		setCatched(catched);
+		setNodes(new ArrayList<>());
 	}
 	
 	/**
@@ -34,28 +31,32 @@ public class DrawTreeNode {
 	 * @param deep	max level of the tree
 	 * @param level	current level of calculation
 	 */
-	void calc(int deep, int level) {
-		String name = "MAX";
-		int start = 0;
-		int end = 6;
-		setMax(false);
-		if (level % 2 == 0) {
-			// aktuelle Node ist Computer-Zug
-			// => for schleife für menschliche Züge
-			name = "MIN";
-			start = 6;
-			end = 12;
-			setMax(true);
-		}
+	void calc(int deep, int level, Pitch pitch) {
+		// gegnerseite
+		int opStart = 0;
+		int opEnd = 6;
+		// eigene seite
+		int ownStart = 6;
+		int ownEnd = 12;
+		
 		if (deep > level) {
-			int index = 0;
-			for (int i = start; i < end; i++, index++) {
-				// only make draw if in the field are balls
-				if (getDraw().getPitch().getFields()[i] > 0) {
-					Draw draw = new Draw(new HumanPlayer(name), getDraw().getPitch().getCopy(), i);
-					DrawTreeNode subNode = new DrawTreeNode(draw);
-					subNode.calc(deep, level + 1);
-					setNodeByIndex(index, subNode);
+			for (int i = opStart; i < opEnd; i++) {
+				if (pitch.getField(i) < 1) {
+					// keine Kugeln vorhanden
+					continue;
+				}
+				// vorausgehender Zug
+				SimulatedDraw priorDraw = new SimulatedDraw(pitch.getCopy(), i);
+				for (int j = ownStart; j < ownEnd; j++) {
+					if (priorDraw.getPitch().getField(j) < 1) {
+						// keine Kugeln vorhanden
+						continue;
+					}
+					SimulatedDraw ownDraw = new SimulatedDraw(priorDraw.getPitch(), j);
+					int points = ownDraw.getCatched() - priorDraw.getCatched();
+					DrawTreeNode subNode = new DrawTreeNode(i, j, points);
+					subNode.calc(deep, level + 1, ownDraw.getPitch());
+					getNodes().add(subNode);
 				}
 			}
 		}
@@ -68,33 +69,25 @@ public class DrawTreeNode {
 	 * -----------------------------------------------------
 	 */
 
-	public ArrayList<Draw> getWay(int curPoints, int winCondition) {
-		ArrayList<Draw> way = new ArrayList<>();
+	ArrayList<Integer> getWay(int curPoints, int winCondition) {
+		ArrayList<Integer> way = new ArrayList<>();
 		isPossibleToWin(this, curPoints, winCondition, way);
 		return way;
 	}
 
-	public boolean isWinnableInTree(int curPoints) {
+	boolean isWinnableInTree(int curPoints) {
 		return isPossibleToWin(this, curPoints, 25, null);
 	}
 
-	private static boolean isPossibleToWin(DrawTreeNode node, int collected, int winCondition, ArrayList<Draw> way) {
-		int start;
-		int end;
-		if (!node.isMax()) {
-			start = 0;
-			end = 6;
-			collected -= node.getDraw().getCatched();
-		} else {
-			start = 6;
+	private static boolean isPossibleToWin(DrawTreeNode node, int collected, int winCondition, ArrayList<Integer> way) {
+		int start = 6,
 			end = 12;
-			collected += node.getDraw().getCatched();
-		}
+		collected += node.catched;
 
 		int index = 0;
 
-		if (node.isMax() && way != null) {
-			way.add(node.getDraw());
+		if (way != null) {
+			way.add(node.ownPlayedField);
 		}
 		// TODO: abbruchbedingung muss noch definiert werden
 		if (collected >= winCondition) // bester weg weil mehr als hälfte der
@@ -115,8 +108,8 @@ public class DrawTreeNode {
 			}
 		}
 
-		if (node.isMax() && way != null) {
-			way.remove(way.indexOf(node.getDraw()));
+		if (way != null) {
+			way.remove(way.indexOf(node.ownPlayedField));
 		}
 		return false;
 	}
@@ -132,7 +125,7 @@ public class DrawTreeNode {
 	 * @see look at static DrawTreeNode.getMax(DrawTreeNode node).
 	 * @return max points which are getable
 	 */
-	public int getMax() {
+	int getMax() {
 		return DrawTreeNode.getMax(this);
 	}
 
@@ -144,12 +137,8 @@ public class DrawTreeNode {
 	 *            to search
 	 * @return max points
 	 */
-	public static int getMax(DrawTreeNode node) {
-		int max = 0;
-		if (node.isMax()) {
-			// dieser Zug ist ein Computer zug, dahier Punkte addieren
-			max += node.getDraw().getCatched();
-		}
+	static int getMax(DrawTreeNode node) {
+		int max = node.getCatched();
 
 		int tmpMax = 0;
 		for (DrawTreeNode subNode : node.getNodes()) {
@@ -171,7 +160,7 @@ public class DrawTreeNode {
 	 * 
 	 * @return deep of the tree.
 	 */
-	public int getDeep() {
+	int getDeep() {
 		int max = 0;
 		for (DrawTreeNode node : getNodes()) {
 			if (node != null) {
@@ -189,7 +178,7 @@ public class DrawTreeNode {
 	 * 
 	 * @return sum of all elements
 	 */
-	public int size() {
+	int size() {
 		int size = 1;
 		for (DrawTreeNode node : getNodes()) {
 			if (node != null) {
@@ -204,43 +193,13 @@ public class DrawTreeNode {
 	 * 
 	 * @return true if there is any subnode otherwise false
 	 */
-	public boolean hasElements() {
+	boolean hasElements() {
 		for (DrawTreeNode node : getNodes()) {
 			if (node == null) {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Checks whether a index is in the range of the subnodes.
-	 * 
-	 * @param index
-	 *            position to check
-	 * @return true if in range of subnodes otherwise false
-	 */
-	private boolean isInRange(int index) {
-		if (index >= 0 || index < getNodes().length) {
-			return true;
-		}
-		// TODO: throw exception
-		return false;
-	}
-
-	/**
-	 * Set nodex by a given index.
-	 * 
-	 * @param index
-	 *            position to set the node
-	 * @param node
-	 *            node to set
-	 */
-	void setNodeByIndex(int index, DrawTreeNode node) {
-		if (!isInRange(index)) {
-			return;
-		}
-		set(index, node);
 	}
 
 	/**
@@ -251,28 +210,17 @@ public class DrawTreeNode {
 	 * @return node from subnodes
 	 */
 	DrawTreeNode getNode(int index) {
-		if (!isInRange(index)) {
+		try {
+			return getNodes().get(index);
+		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
-		return getNodes()[index];
-	}
-
-	/**
-	 * Sete a node at the given index.
-	 * 
-	 * @param index
-	 *            position in the subnodes
-	 * @param node
-	 *            node to set
-	 */
-	private void set(int index, DrawTreeNode node) {
-		nodes[index] = node;
 	}
 
 	/**
 	 * @return subnodes
 	 */
-	public DrawTreeNode[] getNodes() {
+	ArrayList<DrawTreeNode> getNodes() {
 		return nodes;
 	}
 
@@ -282,41 +230,43 @@ public class DrawTreeNode {
 	 * @param nodes
 	 *            with draw, maybe with subnodes
 	 */
-	public void setNodes(DrawTreeNode[] nodes) {
+	void setNodes(ArrayList<DrawTreeNode> nodes) {
 		this.nodes = nodes;
 	}
 
+	int getPriorPlayedField() {
+		return priorPlayedField;
+	}
+
+	void setPriorPlayedField(int priorPlayedField) {
+		this.priorPlayedField = priorPlayedField;
+	}
+	
 	/**
-	 * @return the draw
+	 * @return the catched
 	 */
-	public Draw getDraw() {
-		return draw;
+	int getCatched() {
+		return catched;
 	}
 
 	/**
-	 * @param draw
-	 *            the draw to set
+	 * @param catched the catched to set
 	 */
-	public void setDraw(Draw draw) {
-		this.draw = draw;
+	void setCatched(int catched) {
+		this.catched = catched;
 	}
 
 	/**
-	 * If isMax = true, then the node defines a draw of the computer.
-	 * 
-	 * @return if isMax = true => computer node
+	 * @return the ownPlayedField
 	 */
-	public boolean isMax() {
-		return isMax;
+	int getOwnPlayedField() {
+		return ownPlayedField;
 	}
 
 	/**
-	 * Define whether the current node is from computer by setting isMax = true
-	 * 
-	 * @param isMax
-	 *            if true then node if from computer
+	 * @param ownPlayedField the ownPlayedField to set
 	 */
-	public void setMax(boolean isMax) {
-		this.isMax = isMax;
+	void setOwnPlayedField(int ownPlayedField) {
+		this.ownPlayedField = ownPlayedField;
 	}
 }

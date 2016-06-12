@@ -2,43 +2,27 @@ package de.hsma.ss16.oot.oware;
 
 import java.util.ArrayList;
 
-public class KI {
-	private DrawTreeNode[] nodes;
+class KI {
+	private ArrayList<DrawTreeNode> nodes;
 	private Pitch pitch;
 	private int deep;
-	private Player computer;
-	// private Player opponent!!!!
 	
-	public KI(int difficulty, Pitch currentPitch, Player player) {
-		computer = player;
-		this.nodes = new DrawTreeNode[6];
+	KI(int difficulty, Pitch currentPitch) {
+		setNodes(new ArrayList<>());
 		this.pitch = currentPitch;
-		this.setDeep(2 * difficulty);
+		// maximum 5 calculation => 5 Draw of computer and 5 from human
+		this.setDeep(difficulty + 2);
 	}
 	
-	public int getNextDraw() {
-		calc(getDeep(), 0);
-		ArrayList<Draw> way = getBestWay();
-		for (Draw draw : way) {
-			System.out.println(draw.getPitch());
-		}
-		if(way.size() > 0) {
-			return way.get(0).getStartField();
-		}
-		return -1;
-	}
-	
-	public void calc(int deep, int level) {
-		//System.out.println(deep + " " +  level);
-		int index = 0;
-		for (int i = 0; i < 6; i++, index++) {
+	void calc(int deep, int level) {
+		for (int i = 6; i < 12; i++) {
 			// only make draw if in the field are balls
 			if (pitch.getFields()[i] > 0) {
-				Draw draw = new Draw(new HumanPlayer("MAX"), pitch.getCopy(), i);
-				//System.out.println(draw.getPitch());
-				DrawTreeNode node = new DrawTreeNode(draw);
-				node.calc(deep, level + 1);
-				nodes[index] = node;
+				SimulatedDraw draw = new SimulatedDraw(pitch.getCopy(), i);
+				// System.out.println(draw.getPitch());
+				DrawTreeNode node = new DrawTreeNode(-1, i, draw.getCatched());
+				node.calc(deep, level + 1, draw.getPitch());
+				getNodes().add(node);
 			}
 		}
 	}
@@ -50,16 +34,16 @@ public class KI {
 	 * noch einen Fehler!
 	 * -------------------------------------------------------------------
 	 */
-	private ArrayList<Draw> getBestWay() {
-		ArrayList<Draw> way = new ArrayList<>();
+	private ArrayList<Integer> getBestWay(int currentPoints) {
+		ArrayList<Integer> way = new ArrayList<>();
 		int condition = getMax();
 		int sum = 0;
 		for(DrawTreeNode node : getNodes()) {
 			int tmpSum = 0;
 			if(node != null) {
-				ArrayList<Draw> tmpWay = node.getWay(computer.getPoints(), condition);
-				for (Draw draw : tmpWay) {
-					tmpSum += draw.getCatched();
+				ArrayList<Integer> tmpWay = node.getWay(currentPoints, condition);
+				for (Integer draw : tmpWay) {
+					//tmpSum += draw.getCatched();
 				}
 				if(tmpSum > sum) {
 					sum = tmpSum;
@@ -76,11 +60,11 @@ public class KI {
 	 * 
 	 * @return	boolean if computer can win
 	 */
-	public boolean isPossibleToWin() {
+	boolean isPossibleToWin(int curPoints) {
 		boolean isWinable = false;
 		for(DrawTreeNode node : getNodes()) {
 			if(node != null) {
-				if(node.isWinnableInTree(computer.getPoints())) {
+				if(node.isWinnableInTree(curPoints)) {
 					isWinable = true;
 				}
 			}
@@ -94,7 +78,7 @@ public class KI {
 	 * 
 	 * @return	max point
 	 */
-	public int getMax() {
+	int getMax() {
 		int max = 0;
 		for(DrawTreeNode node : getNodes()) {
 			if(node != null) {
@@ -107,12 +91,29 @@ public class KI {
 		return max;
 	}
 	
+	int getBestDraw() {
+		calc(getDeep(), 0);
+		DrawTreeNode bestNode = null;
+		int max = -1;
+		for(DrawTreeNode node : getNodes()) {
+			if(node != null) {
+				int minmax = node.getMax();
+				if(minmax > max) {
+					bestNode = node;
+					max = node.getMax();
+				}
+			}
+		}
+		setNodes(new ArrayList<>());
+		return bestNode.getOwnPlayedField();
+	}
+	
 	/**
 	 * Returns the deep of the tree./Counts the levels.
 	 * 
 	 * @return	deep of the tree.
 	 */
-	public int deep() {
+	int deep() {
 		/* (-1), because the node "tree" is the root node
 		 *  and is a draw which is already done.
 		 */
@@ -132,7 +133,7 @@ public class KI {
 	 * 
 	 * @return	count of element in tree
 	 */
-	public int size() {
+	int size() {
 		int sum = 0;
 		for(DrawTreeNode node : getNodes()) {
 			if(node != null) {
@@ -143,42 +144,17 @@ public class KI {
 	}
 	
 	/**
-	 * Shows the current best way. THIS IS ONLY FOR TESTS!
-	 */
-	public void showBestWay() {
-		for(Draw draw : getBestWay()) {
-			System.out.println(draw.getPlayer().getName() + ": ");
-			System.out.println("Punkte des Zuges: " + draw.getCatched());
-			System.out.println(draw.getPitch());
-			System.out.println("\n-----------------------------------\n");
-		}
-	}
-	
-	/*
-	 * ----------------------------------------------------
-	 * GETTER / SETTER
-	 * ----------------------------------------------------
-	 */
-	
-	/**
 	 * @return the tree
 	 */
-	public DrawTreeNode[] getNodes() {
+	ArrayList<DrawTreeNode> getNodes() {
 		return nodes;
-	}
-	
-	/**
-	 * Sets the nodes
-	 */
-	public void getNodes(DrawTreeNode[] nodes) {
-		this.nodes = nodes;
 	}
 
 	/**
 	 * Defines the maximum level of the tree. 
 	 * @return	maximum level of the tree.
 	 */
-	public int getDeep() {
+	int getDeep() {
 		return deep;
 	}
 
@@ -187,14 +163,14 @@ public class KI {
 	 * 
 	 * @param deep max level
 	 */
-	public void setDeep(int deep) {
+	void setDeep(int deep) {
 		this.deep = deep;
 	}
 
 	/**
 	 * @param nodes the nodes to set
 	 */
-	void setNodes(DrawTreeNode[] nodes) {
+	void setNodes(ArrayList<DrawTreeNode> nodes) {
 		this.nodes = nodes;
 	}
 

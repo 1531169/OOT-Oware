@@ -18,8 +18,7 @@ class ComputerPlayer extends Player {
 	
 	@Override
 	protected int getField() {
-		// TODO implementation
-		return -1;
+		return ki.getBestDraw();
 	}
 	
 	int getDifficulty() {

@@ -18,7 +18,8 @@ class Pitch {
 	}
 
 	public int move(int field) {
-		return Pitch.move(this, field);
+		return distribute(field);
+//		return Pitch.move(this, field);
 	}
 
 	static int move(Pitch pitch, int field) {
@@ -67,10 +68,14 @@ class Pitch {
 		}
 		return catched;
 	}
-
+	
 	private int distribute(int hollow) {
+		int position = -1;
+		if(this.fields[hollow] == ZERO){
+			return position;
+		}
 		int hollowContents = this.fields[hollow];
-		int position = hollow + 1;
+		position = hollow + 1;
 		for (int i = position; hollowContents > 0; i++) {
 			position = i % fields.length;
 			
@@ -110,7 +115,23 @@ class Pitch {
 		}
 		return false;
 	}
-
+	boolean isNeverReachable(Player player){
+		int rest = 0;
+		if(isOppositeFieldEmpty(player)){
+			for(int i = player.getStartRange();i< player.getEndRange();i++){
+				if(isOppositeFieldReachable(i)){
+					return false;
+				}
+			}
+			
+			for(int i = player.getStartRange();i< player.getEndRange();i++){
+				rest += this.fields[i];
+				this.fields[i] = 0;
+			}
+			player.addPoints(rest);
+		}
+		return false;
+	}
 	/**
 	 * this method verify if the opposite field is empty.
 	 * 

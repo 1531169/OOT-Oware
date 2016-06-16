@@ -5,12 +5,11 @@ import java.util.HashMap;
 
 class Game {
 	private static final Pitch pitch = new Pitch();
-	private static Player player1;
-	private static Player player2;
 	private static Player onWait;
 	private static Player onDraw;
 	private static Player winner;
 	private static boolean isFinished;
+	private static boolean isCanceled;
 	private static HashMap<Character, Integer> inputMap1;
 	private static HashMap<Character, Integer> inputMap2;
 	private static ArrayList<Draw> drawlist;
@@ -21,6 +20,8 @@ class Game {
 	}
 
 	private void init() {
+		Player player1 = null;
+		Player player2 = null;
 		initMaps();
 		drawlist = new ArrayList<>();
 		isFinished = false;
@@ -29,16 +30,16 @@ class Game {
 
 		switch (inGameMode) {
 			case PVC:
-				IOController.printPlayer1();
+				IOController.printPlayer(1);
 				player1 = new HumanPlayer(IOController.getName(), inputMap1);
 				player2 = new ComputerPlayer(IOController.getDifficulty());
 				player1.setRange(0, 6);
 				player2.setRange(6, 12);
 				break;
 			case PVP:
-				IOController.printPlayer1();
+				IOController.printPlayer(1);
 				player1 = new HumanPlayer(IOController.getName(), inputMap1);
-				IOController.printPlayer2();
+				IOController.printPlayer(2);
 				player2 = new HumanPlayer(IOController.getName(), inputMap2);
 				player1.setRange(0, 6);
 				player2.setRange(6, 12);
@@ -63,13 +64,23 @@ class Game {
 			playTurn(onDraw);
 			nextPlayer();
 		}
-		showResult();
+		if(!isCanceled) {
+			showResult();
+		}		
 		anotherRound();
 	}
 	
 	private void playTurn(Player player) {
 		IOController.printOnDraw(player);
-		drawlist.add(player.doDraw());
+		Draw draw = player.doDraw();
+		
+		if(draw == null) {
+			setCanceled(player);
+		}
+		else{
+			drawlist.add(draw);
+		}
+		
 		checkFinished(player);
 	}
 	
@@ -159,5 +170,11 @@ class Game {
 	private static void setWinner(Player player) {
 		winner = player;
 		isFinished = true;
+	}
+	
+	private static void setCanceled(Player player) {
+		isCanceled = true;
+		isFinished = true;
+		IOController.printCanceled(player);
 	}
 }

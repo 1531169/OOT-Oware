@@ -13,7 +13,14 @@ class HumanPlayer extends Player {
 
 	@Override
 	Draw doDraw() {
-		return new Draw(this, getField());
+		int field = getField();
+		
+		if(field == -1) {
+			return null;
+		}
+		else{
+			return new Draw(this, field);
+		}		
 	}
 	
 	@Override

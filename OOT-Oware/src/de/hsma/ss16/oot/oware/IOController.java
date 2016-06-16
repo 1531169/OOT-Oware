@@ -7,7 +7,9 @@ class IOController {
 
 	private static Scanner sc = new Scanner(System.in);
 	
-	private static final String TXT_WELCOME = "Herzlich Willkommen zum Spiel Oware!\n";
+	private static final String TXT_WELCOME = "Herzlich Willkommen zum Spiel Oware!\n" +
+					" Sie können nach Spielstart das Spiel jederzeit\n" +
+					" über die Eingabe von \"fertig\" beenden!\n";
 	
 	private static final String TXT_ENTER_NAME = "Bitte geben Sie ihren Namen ein:";
 	
@@ -28,15 +30,15 @@ class IOController {
 	private static final String TXT_DRAW_NOT_VALID = "Diese Mulde dürfen Sie" +
 					" nicht spielen!\n";
 	
-	private static final String TXT_ANOTHER_ROUND = "Möchten Sie eine Revanche?\n (J = Ja)";
+	private static final String TXT_ANOTHER_ROUND = "Möchten Sie eine Revanche?\n (ja für Revanche)";
 	
-	private static final String YES = "J";
+	private static final String YES = "ja";
 	
 	private static final String TXT_DO_INPUT = "> ";
 	
 	private static final String ONESTR = "1", TWOSTR = "2", THREESTR = "3";
 	
-	private static final int ONE = 1, TWO = 2, THREE = 3;
+	private static final int ONE = 1, TWO = 2, THREE = 3, MINUS_ONE = -1;
 	
 	private static final String TXT_TIE = "Unentschieden";
 	
@@ -47,6 +49,12 @@ class IOController {
 	private static final String TXT_PLAYER_ONE = "Spieler 1, ";
 	
 	private static final String TXT_PLAYER_TWO = "Spieler 2, ";
+	
+	private static final String TXT_PLAYER_UNKNOWN = "Spieler, ";
+	
+	private static final String TXT_CANCELED = "fertig";
+	
+	private static final String TXT_GAME_CANCELED = " hat das Spiel abgebrochen";
 	
 		
 	public IOController() {
@@ -140,6 +148,10 @@ class IOController {
 			return getField(player);
 		}
 		
+		if(checkCanceled(inputStr)) {
+			return MINUS_ONE;
+		}
+		
 		if(!(inputStr.length() == 1)) {
 			System.out.println(TXT_INPUT_MORE_THAN_ONE_SIGN);
 			return getField(player);
@@ -208,12 +220,27 @@ class IOController {
 		System.out.println("\n" + player.getName() + TXT_ON_DRAW);
 	}
 	
-	static void printPlayer1() {
-		System.out.print(TXT_PLAYER_ONE);
+	static void printPlayer(int nr) {
+		if(nr == ONE) {
+			System.out.print(TXT_PLAYER_ONE);
+		}
+		else if(nr == TWO) {
+			System.out.print(TXT_PLAYER_TWO);
+		}
+		else{
+			System.out.print(TXT_PLAYER_UNKNOWN);
+		}
 	}
 	
-	static void printPlayer2() {
-		System.out.print(TXT_PLAYER_TWO);
+	static void printCanceled(Player player) {
+		System.out.println("\n" + player.getName() + TXT_GAME_CANCELED);
+	}
+	
+	private static boolean checkCanceled(String str) {
+		if(str.equals(TXT_CANCELED)) {
+			return true;
+		}
+		return false;
 	}
 	
 	private static void showModes() {		

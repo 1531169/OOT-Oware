@@ -2,7 +2,6 @@ package de.hsma.ss16.oot.oware;
 
 class Draw {
 
-	private static int nr = 0;
 	private Pitch pitch;
 	private int startField;
 	private int endField;
@@ -19,7 +18,6 @@ class Draw {
 	}
 
 	private void init(Player p, Pitch pi, int s) {
-		setNr(getNr() + 1);
 		this.player = p;
 		this.setPitch(pi);
 		this.startField = s;
@@ -33,14 +31,6 @@ class Draw {
 		catched = collect(pitch, startField);
 		// sammeln
 		player.addPoints(catched);
-		if (player.getPoints() >= 25) {
-
-		}
-		boolean isDrawPossible = true;
-		if (!isDrawPossible) {
-			// TODO: verteile Punkte, setze Gewinner
-		}
-		// Zug zu ende
 	}
 
 	private int collect(Pitch pitch, int field) {
@@ -131,13 +121,5 @@ class Draw {
 	 */
 	public void setCatched(int catched) {
 		this.catched = catched;
-	}
-
-	public static int getNr() {
-		return nr;
-	}
-
-	public static void setNr(int nr) {
-		Draw.nr = nr;
 	}
 }

@@ -10,6 +10,7 @@ class Game {
 	private static Player winner;
 	private static boolean isFinished;
 	private static boolean isCanceled;
+	private static int lowFilledDrawsNr = 0;
 	private static HashMap<Character, Integer> inputMap1;
 	private static HashMap<Character, Integer> inputMap2;
 	private static ArrayList<Draw> drawlist;
@@ -100,6 +101,40 @@ class Game {
 	private static void checkFinished(Player player) {
 		if(player.getPoints() >= 25) {
 			setWinner(player);
+		}
+		checkEndlessLoop();
+	}
+	
+	private static void checkEndlessLoop() {
+		if(pitchLowFilled()) {
+			lowFilledDrawsNr++;
+		}
+		if(lowFilledDrawsNr == 5) {
+			if(IOController.getEndlessLoopConfirm()) {
+				setWinner(hasMorePoints());
+			}
+		}
+		if(lowFilledDrawsNr == 10) {
+			setWinner(hasMorePoints());
+		}
+	}
+	
+	private static boolean pitchLowFilled() {
+		if(getPitch().getAmountTotal() <= 4) {
+			return true;
+		}
+		return false;
+	}
+	
+	private static Player hasMorePoints() {
+		if(getOnDraw().getPoints() > getOnWait().getPoints()) {
+			return getOnDraw();
+		}
+		else if(getOnWait().getPoints() > getOnDraw().getPoints()) {
+			return getOnWait();
+		}
+		else {
+			return null;
 		}
 	}
 	

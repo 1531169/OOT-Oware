@@ -163,9 +163,17 @@ class Pitch {
 
 	void reset() {
 		// initial zustand des feldes
-		for (int i = 0; i < fields.length; i++) {
+		for (int i = 0; i < getLength(); i++) {
 			fields[i] = 4;
 		}
+	}
+	
+	int getAmountTotal() {
+		int amount = 0;
+		for (int i = 0; i < getLength(); i++) {
+			amount += getField(i);
+		}
+		return amount;
 	}
 
 	int getField(int index) {

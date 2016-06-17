@@ -224,12 +224,21 @@ class Pitch {
 	@Override
 	public String toString() {
 		String result = "| ";
+		result = "\n- ";
+		for(char i = 'f'; i >= 'a'; i--){
+			result += i + " "+ "-" + " ";  
+		}
+		result += "\n| ";
 		for (int i = 5; i >= 0; i--) {
 			result += getField(i) + " | ";
 		}
 		result += "\n| ";
 		for (int i = 6; i < 12; i++) {
 			result += getField(i) + " | ";
+		}
+		result += "\n- ";
+		for(char i = 'a'; i<= 'f'; i++){
+			result += i+ " "+ "-" +" ";
 		}
 		return result;
 	}

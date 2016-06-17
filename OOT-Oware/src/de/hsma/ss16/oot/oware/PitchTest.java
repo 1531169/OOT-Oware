@@ -66,7 +66,7 @@ public class PitchTest {
 	public void testIsDrawValid() {
 		Pitch p= new Pitch(sit2);
 		boolean expected = true;
-		Player player = new HumanPlayer("Adolf", null);
+		Player player = new HumanPlayer("Rudolf", null);
 		boolean actual=p.isDrawValid(player, 5);
 		assertEquals(expected, actual);
 		

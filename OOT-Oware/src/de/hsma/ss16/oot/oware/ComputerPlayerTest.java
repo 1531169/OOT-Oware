@@ -1,14 +1,19 @@
 package de.hsma.ss16.oot.oware;
 
-import static org.junit.Assert.*;
+import java.security.InvalidParameterException;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-public class ComputerPlayerTest {
+public class ComputerPlayerTest extends Assert {
 
-	@Test
-	public void test() {
-		fail("Not yet implemented");
+	@Test (expected = InvalidParameterException.class)
+	public void testComputerPlayer() {
+		new ComputerPlayer(-100);
 	}
-
+	
+	@Test
+	public void testPosConstructor() {
+		new ComputerPlayer(1);
+	}
 }

@@ -56,6 +56,9 @@ class IOController {
 	
 	private static final String TXT_GAME_CANCELED = " hat das Spiel abgebrochen";
 	
+	private static final String TXT_ENDLESS_LOOP = "Das Spiel scheint sich in einer Endlosschleife " +
+					"zu befinden.\nMöchten Sie es beenden?\n (ja für beenden)\n";
+	
 		
 	public IOController() {
 
@@ -184,6 +187,26 @@ class IOController {
 		String input;
 		
 		System.out.println(TXT_ANOTHER_ROUND);
+		System.out.print(TXT_DO_INPUT);
+		
+		try{
+			input = sc.nextLine();
+		}
+		catch(Exception e) {
+			System.out.println(TXT_INPUT_NOT_VALID);
+			return getAnotherRound();
+		}
+		
+		if(input.equals(YES)) {
+			return true;
+		}
+		return false;
+	}
+	
+	static boolean getEndlessLoopConfirm() {
+		String input;
+		
+		System.out.println(TXT_ENDLESS_LOOP);
 		System.out.print(TXT_DO_INPUT);
 		
 		try{

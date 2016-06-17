@@ -25,12 +25,14 @@ class Draw {
 	}
 
 	public void execute() {
-		// saen
-		endField = pitch.move(startField);
-		// fangen
-		catched = collect(pitch, startField);
-		// sammeln
-		player.addPoints(catched);
+		if (pitch.isDrawValid(player, startField)) {
+			// saen
+			endField = pitch.move(startField);
+			// fangen
+			catched = collect(pitch, startField);
+			// sammeln
+			player.addPoints(catched);
+		}
 	}
 
 	private int collect(Pitch pitch, int field) {
@@ -49,7 +51,7 @@ class Draw {
 	}
 
 	static boolean isDrawValid(Player player, int hollow, Pitch pitch) {
-		if(pitch.isDrawValid(player, hollow)){
+		if (pitch.isDrawValid(player, hollow)) {
 			return true;
 		}
 		return false;

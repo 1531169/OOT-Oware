@@ -14,6 +14,8 @@ class Game {
 	private static HashMap<Character, Integer> inputMap1;
 	private static HashMap<Character, Integer> inputMap2;
 	private static ArrayList<GameDraw> drawlist;
+	Player player1 = null;
+	Player player2 = null;
 
 	public Game() {
 		init();
@@ -21,8 +23,6 @@ class Game {
 	}
 
 	private void init() {
-		Player player1 = null;
-		Player player2 = null;
 		initMaps();
 		drawlist = new ArrayList<>();
 		isFinished = false;
@@ -61,7 +61,8 @@ class Game {
 
 	private void play() {
 		while (!isFinished) {
-			IOController.printPitch();
+			
+			IOController.printPitch(player1,player2);
 			playTurn(onDraw);
 			nextPlayer();
 		}

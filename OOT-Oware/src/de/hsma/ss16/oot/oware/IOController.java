@@ -232,8 +232,8 @@ class IOController {
 		System.out.println(TXT_WELCOME);
 	}
 	
-	static void printPitch() {
-		System.out.println(Game.getPitch());
+	static void printPitch(Player p1, Player p2) {
+		System.out.println(p1.toString()+ Game.getPitch() +"\n"+p2.toString());
 	}
 	
 	static void printTie() {

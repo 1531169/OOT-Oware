@@ -223,6 +223,11 @@ class IOController {
 		return false;
 	}
 	
+	static void printStandings(){
+		System.out.println("["+Game.getOnDraw().getName()+"= " + Game.getOnDraw().getPoints()+"]");
+		System.out.print("["+Game.getOnDraw().getName()+"= "+ Game.getOnDraw().getPoints()+"]");
+	}
+	
 	static void printWelcome() {
 		System.out.println(TXT_WELCOME);
 	}

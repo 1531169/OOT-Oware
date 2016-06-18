@@ -12,8 +12,8 @@ class ComputerPlayer extends Player {
 	}
 
 	@Override
-	Draw doDraw() {
-		return new Draw(this, getField());
+	GameDraw doDraw() {
+		return new GameDraw(this, getField());
 	}
 	
 	@Override

@@ -38,7 +38,7 @@ abstract class Player {
 		this.points += points;
 	}
 	
-	abstract Draw doDraw();
+	abstract GameDraw doDraw();
 	
 	abstract protected int getField();
 }

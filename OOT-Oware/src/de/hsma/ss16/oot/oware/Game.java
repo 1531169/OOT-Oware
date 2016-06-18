@@ -13,7 +13,7 @@ class Game {
 	private static int lowFilledDrawsNr = 0;
 	private static HashMap<Character, Integer> inputMap1;
 	private static HashMap<Character, Integer> inputMap2;
-	private static ArrayList<Draw> drawlist;
+	private static ArrayList<GameDraw> drawlist;
 
 	public Game() {
 		init();
@@ -75,7 +75,7 @@ class Game {
 
 //		if (!pitch.isNeverReachable(player)) {
 			IOController.printOnDraw(player);
-			Draw draw = player.doDraw();
+			GameDraw draw = player.doDraw();
 
 			if (draw == null) {
 				setCanceled(player);

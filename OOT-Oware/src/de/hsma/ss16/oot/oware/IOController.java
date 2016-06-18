@@ -173,7 +173,7 @@ class IOController {
 		
 		int field = player.getInputMap().get(input);
 		
-		if(Draw.isDrawValid(player, field, Game.getPitch())) {
+		if(GameDraw.isDrawValid(player, field, Game.getPitch())) {
 			return field;
 		}
 		

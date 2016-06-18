@@ -11,7 +11,7 @@ class ArtificialIntelligence {
 		setNodes(new ArrayList<>());
 		this.pitch = currentPitch;
 		// maximum 5 calculation => 5 Draw of computer and 5 from human
-		this.setDeep(difficulty + 2);
+		this.setDeep(difficulty);
 	}
 	
 	void calc(int deep, int level) {

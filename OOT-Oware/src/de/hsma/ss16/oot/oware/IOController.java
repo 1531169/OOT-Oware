@@ -44,8 +44,6 @@ class IOController {
 	
 	private static final String TXT_WINNER = " hat gewonnen! \nHerzlichen Glückwunsch!";
 	
-	private static final String TXT_VERLIERER = " hat leider verloren!";
-	
 	private static final String TXT_ON_DRAW = " ist jetzt am Zug";
 	
 	private static final String TXT_PLAYER_ONE = "Spieler 1, ";
@@ -228,9 +226,6 @@ class IOController {
 		return false;
 	}
 	
-	static void printLOSER(){
-		System.out.println("["+Game.getOnDraw().getName()+"= " + Game.getOnDraw().getPoints()+"]" + TXT_VERLIERER);
-	}
 	
 	static void printWelcome() {
 		System.out.println(TXT_WELCOME);

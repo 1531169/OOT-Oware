@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 class Game {
-	private static final Pitch pitch = new Pitch();
+	private static final Pitch pitch  = new Pitch();;
 	private static Player onWait;
 	private static Player onDraw;
 	private static Player winner;
@@ -14,8 +14,8 @@ class Game {
 	private static HashMap<Character, Integer> inputMap1;
 	private static HashMap<Character, Integer> inputMap2;
 	private static ArrayList<GameDraw> drawlist;
-	Player player1 = null;
-	Player player2 = null;
+	Player player1;
+	Player player2;
 
 	public Game() {
 		init();
@@ -24,6 +24,7 @@ class Game {
 
 	private void init() {
 		initMaps();
+		pitch.reset();
 		drawlist = new ArrayList<>();
 		isFinished = false;
 		IOController.printWelcome();
@@ -61,7 +62,6 @@ class Game {
 
 	private void play() {
 		while (!isFinished) {
-			
 			IOController.printPitch(player1,player2);
 			playTurn(onDraw);
 			nextPlayer();
@@ -74,7 +74,7 @@ class Game {
 
 	private void playTurn(Player player) {
 
-//		if (!pitch.isNeverReachable(player)) {
+		if (!pitch.isNeverReachable(player)) {
 			IOController.printOnDraw(player);
 			GameDraw draw = player.doDraw();
 
@@ -84,9 +84,10 @@ class Game {
 				drawlist.add(draw);
 			}
 			checkFinished(player);
-//		} else {
-//			IOController.printOnDraw(player);
-//		}
+		} else {
+			setWinner(hasMorePoints());
+			showResult();
+		}
 	}
 
 	public static void main(String[] args) {

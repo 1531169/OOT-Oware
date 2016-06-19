@@ -241,7 +241,7 @@ class IOController {
 	}
 	
 	static void printWinner(Player player) {
-		System.out.println(player.getName() + TXT_WINNER);
+		System.out.println(player.toString() + TXT_WINNER);
 	}
 	
 	static void printOnDraw(Player player) {

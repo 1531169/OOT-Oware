@@ -1,20 +1,29 @@
 package de.hsma.ss16.oot.oware;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 class ArtificialIntelligence {
+	private static final String EX_MSG_NULL_PARAM = "Das übergebene Feld ist null.";
+	private static final String EX_MSG_OUT_OF_RANGE = "Der übergebene Schwierigkeitsgrad ist "
+			+ "kleiner  1 oder größer 3.";
 	private ArrayList<DrawTreeNode> nodes;
 	private Pitch pitch;
 	private int deep;
 	
 	ArtificialIntelligence(int difficulty, Pitch currentPitch) {
+		if(currentPitch == null) {
+			throw new InvalidParameterException(EX_MSG_NULL_PARAM);
+		}
+		if(difficulty < 1 || difficulty > 3) {
+			throw new InvalidParameterException(EX_MSG_OUT_OF_RANGE);
+		}
 		setNodes(new ArrayList<>());
 		this.pitch = currentPitch;
-		// maximum 5 calculation => 5 Draw of computer and 5 from human
-		this.setDeep(difficulty);
+		this.deep = difficulty;
 	}
 	
-	void calc(int deep, int level) {
+	private void calc(int deep, int level) {
 		for (int i = 6; i < 12; i++) {
 			// only make draw if in the field are balls
 			if (pitch.getFields()[i] > 0) {
@@ -110,18 +119,9 @@ class ArtificialIntelligence {
 	}
 
 	/**
-	 * Set the max level of the tree for calculation.
-	 * 
-	 * @param deep max level
-	 */
-	void setDeep(int deep) {
-		this.deep = deep;
-	}
-
-	/**
 	 * @param nodes the nodes to set
 	 */
-	void setNodes(ArrayList<DrawTreeNode> nodes) {
+	private void setNodes(ArrayList<DrawTreeNode> nodes) {
 		this.nodes = nodes;
 	}
 

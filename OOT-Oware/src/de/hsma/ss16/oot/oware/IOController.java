@@ -56,6 +56,8 @@ class IOController {
 	
 	private static final String TXT_CANCELED = "fertig";
 	
+	private static final String TXT_SPIELENDE = "Spielende, vielen Dank für das spielen!";
+	
 	private static final String TXT_GAME_CANCELED = " hat das Spiel abgebrochen";
 	
 	private static final String TXT_ENDLESS_LOOP = "Das Spiel scheint sich in einer Endlosschleife " +
@@ -202,6 +204,7 @@ class IOController {
 		if(input.equals(YES)) {
 			return true;
 		}
+		System.out.println(TXT_SPIELENDE);
 		return false;
 	}
 	

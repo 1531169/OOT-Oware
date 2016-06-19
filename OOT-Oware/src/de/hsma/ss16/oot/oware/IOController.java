@@ -205,7 +205,7 @@ class IOController {
 			return true;
 		}
 		System.out.println(TXT_SPIELENDE);
-		return false;
+		return false; 
 	}
 	
 	static boolean getEndlessLoopConfirm() {

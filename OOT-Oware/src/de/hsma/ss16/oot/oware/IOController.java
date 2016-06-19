@@ -213,7 +213,7 @@ class IOController {
 		
 		System.out.println(TXT_ENDLESS_LOOP);
 		System.out.print(TXT_DO_INPUT);
-		
+		 
 		try{
 			input = sc.nextLine();
 		}

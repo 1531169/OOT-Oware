@@ -98,7 +98,7 @@ class Game {
 	/**
 	 * wechselt Spieler
 	 */
-	void nextPlayer() {
+	void nextPlayer() { 
 		Player tmpPlayer = getOnDraw();
 		setOnDraw(getOnWait());
 		setOnWait(tmpPlayer);
